@@ -56,4 +56,77 @@
       -->
 
       <div class="modal-footer">
-        <a href="#" class="btn" id="actionBtn">Узнать больше</a*
+        <a href="#" class="btn" id="actionBtn">Узнать больше</a>
+        <button id="dismissBtn" class="btn" style="background:#666">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const overlay = document.getElementById('overlay');
+  const openBtn = document.getElementById('openBtn');
+  const closeBtn = document.getElementById('closeBtn');
+  const dismissBtn = document.getElementById('dismissBtn');
+  const actionBtn = document.getElementById('actionBtn');
+
+  // Показывает модал
+  function show() {
+    overlay.classList.add('show');
+    overlay.setAttribute('aria-hidden','false');
+    // Запомнить, что показали (показывать 1 раз при первом визите)
+    try { localStorage.setItem('popup_shown','1'); } catch(e){}
+    // Сдвинуть фокус внутрь диалога для доступности
+    closeBtn.focus();
+    document.addEventListener('focus', trapFocus, true);
+    document.addEventListener('keydown', onKey);
+  }
+
+  function hide() {
+    overlay.classList.remove('show');
+    overlay.setAttribute('aria-hidden','true');
+    document.removeEventListener('focus', trapFocus, true);
+    document.removeEventListener('keydown', onKey);
+    openBtn.focus();
+  }
+
+  // Простая ловушка фокуса — если фокус уходит за пределы модала, возвращаем к кнопке закрытия
+  function trapFocus(e) {
+    if (!overlay.contains(e.target)) {
+      e.stopPropagation();
+      closeBtn.focus();
+    }
+  }
+
+  function onKey(e) {
+    if (e.key === 'Escape') hide();
+  }
+
+  openBtn.addEventListener('click', show);
+  closeBtn.addEventListener('click', hide);
+  dismissBtn.addEventListener('click', hide);
+
+  // Пример действия кнопки — здесь можно перенаправить
+  actionBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    // замените URL на нужный вам
+    window.open('https://example.com','_blank','noopener');
+  });
+
+  // Закрываем при клике по overlay вне модала
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) hide();
+  });
+
+  // Автопоказ один раз при первом визите (задержка 1.2s)
+  try {
+    if (!localStorage.getItem('popup_shown')) {
+      setTimeout(show, 1200);
+    }
+  } catch (e) {
+    // если localStorage недоступен, ничего страшного — автопоказ отключён
+  }
+})();
+</script>
+</body>
+</html>
