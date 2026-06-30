@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Popup Demo</title>
+  <meta name="description" content="Демонстрация всплывающего модального окна для встраивания в Google Sites" />
+  <style>
+    :root {
+      --bg:#ffffff;
+      --primary:#0069d9;
+      --overlay-bg: rgba(0,0,0,0.5);
+      --radius:10px;
+      --max-width:520px;
+    }
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:#111}
+    .container{max-width:980px;margin:32px auto;padding:0 16px}
+    .btn{display:inline-block;padding:10px 16px;background:var(--primary);color:#fff;border-radius:6px;text-decoration:none;border:0;cursor:pointer}
+    /* overlay & modal */
+    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--overlay-bg);visibility:hidden;opacity:0;transition:opacity .18s linear;z-index:9999}
+    .overlay.show{visibility:visible;opacity:1}
+    .modal{background:#fff;border-radius:var(--radius);max-width:var(--max-width);width:92%;padding:20px 20px 16px;box-shadow:0 18px 40px rgba(3,10,21,.25);position:relative}
+    .modal h2{margin:0 0 8px;font-size:20px}
+    .modal p{margin:0 0 12px;line-height:1.4}
+    .close{position:absolute;top:8px;right:8px;background:transparent;border:0;font-size:22px;line-height:1;color:#666;cursor:pointer}
+    .modal-footer{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    /* small screens */
+    @media (max-width:420px){ .modal{padding:16px} .modal h2{font-size:18px} }
+  </style>
+</head>
+<body>
+  <main class="container" role="main">
+    <h1>Демонстрация всплывающего окна</h1>
+    <p>Это статическая страница, содержащая модальное окно. Вы можете вставить её в Google Sites через Embed → By URL.</p>
+    <p>
+      <button id="openBtn" class="btn" type="button">Показать всплывающее окно</button>
+    </p>
+  </main>
+
+  <!-- Modal overlay -->
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
+    <div class="modal" role="document">
+      <button id="closeBtn" class="close" aria-label="Закрыть">&times;</button>
+      <h2 id="modalTitle">Подпишитесь на новости</h2>
+      <p>Подпишитесь, чтобы получать обновления и полезные материалы. Вариант: замените на уведомление или форму.</p>
+
+      <!-- Пример простой формы (не отправляет данные — замените action на ваш обработчик) -->
+      <!--
+      <form action="https://example.com/subscribe" method="post">
+        <input name="email" type="email" placeholder="Ваш email" required style="padding:8px;width:100%;box-sizing:border-box;margin-bottom:8px;border:1px solid #ddd;border-radius:6px" />
+        <div class="modal-footer">
+          <button type="submit" class="btn">Подписаться</button>
+          <button type="button" id="closeBtn2" class="btn" style="background:#666">Отмена</button>
+        </div>
+      </form>
+      -->
+
+      <div class="modal-footer">
+        <a href="#" class="btn" id="actionBtn">Узнать больше</a*
