@@ -1,200 +1,120 @@
-<!doctype html>
-<html lang="uk">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>📞 Зв'яжіться з нами:</title>
-  <meta name="description" content="Форма данных" />
-  <style>
-    :root {
-      --bg:#ffffff;
-      --primary:#0069d9;
-      --overlay-bg: rgba(0,0,0,0.5);
-      --radius:10px;
-      --max-width:520px;
-    }
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:#111}
-    .container{max-width:980px;margin:32px auto;padding:0 16px}
-    .btn{display:inline-block;padding:10px 16px;background:var(--primary);color:#fff;border-radius:6px;text-decoration:none;border:0;cursor:pointer}
-    /* overlay & modal */
-    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--overlay-bg);visibility:hidden;opacity:0;transition:opacity .18s linear;z-index:9999}
-    .overlay.show{visibility:visible;opacity:1}
-    .modal{background:#fff;border-radius:var(--radius);max-width:var(--max-width);width:92%;padding:20px 20px 16px;box-shadow:0 18px 40px rgba(3,10,21,.25);position:relative}
-    .modal h2{margin:0 0 8px;font-size:20px}
-    .modal p{margin:0 0 12px;line-height:1.4}
-    .close{position:absolute;top:8px;right:8px;background:transparent;border:0;font-size:22px;line-height:1;color:#666;cursor:pointer}
-    .modal-footer{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    form .field{margin-bottom:10px}
-    label{display:block;font-size:14px;margin-bottom:6px}
-    input[type="text"], input[type="tel"], input[type="email"]{
-      width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;
-    }
-    .consent{font-size:12px;color:#666;margin-top:8px}
-    .success{padding:16px;text-align:center}
-    @media (max-width:420px){ .modal{padding:16px} .modal h2{font-size:18px} }
-  </style>
-</head>
-<body>
-  <main class="container" role="main">
-    <h1>📞 Зв'яжіться з нами:</h1>
-    <p>Телефони:
+<!-- Вставьте этот блок в HTML-виджет -->
+<style>
+/* Стили модального окна */
+.gs-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.gs-modal {
+  background: #fff;
+  max-width: 420px;
+  width: 90%;
+  border-radius: 10px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+.gs-modal h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+.gs-modal .contacts {
+  white-space: pre-line;
+  font-size: 15px;
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+.gs-modal .buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.gs-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+.gs-btn-primary {
+  background: #0b74de;
+  color: #fff;
+}
+.gs-btn-close {
+  background: #f1f1f1;
+  color: #111;
+}
+@media (max-width: 420px){
+  .gs-modal { padding: 14px; }
+}
+</style>
+
+<!-- Структура модального окна -->
+<div id="gsModalBackdrop" class="gs-modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="gs-modal" role="document" aria-labelledby="gsModalTitle">
+    <h3 id="gsModalTitle">📞 Зв'яжіться з нами</h3>
+    <div class="contacts">
+Телефони:
 +380 50 470 26 85
 +380 98 789 62 29
+
 Telegram / Viber / WhatsApp:
 +380 50 470 26 85
 +380 98 789 62 29
-Будемо раді відповісти на ваші запитання та допомогти!</p>
-    <p>
-      <button id="openBtn" class="btn" type="button">Отримати консультацію</button>
-    </p>
-  </main>
 
-  <!-- Modal overlay -->
-  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
-    <div class="modal" role="document" id="modalContent">
-      <button id="closeBtn" class="close" aria-label="Закрити">&times;</button>
-      <h2 id="modalTitle">Залиште свої контактні дані</h2>
-      <p>Ми зв’яжемося з вами найближчим часом і відповімо на всі питання щодо вступу та навчальних програм.</p>
-
-      <form id="contactForm" novalidate>
-        <div class="field">
-          <label for="name">Ім'я <span aria-hidden="true" style="color:#d00">*</span></label>
-          <input id="name" name="name" type="text" required autocomplete="name" placeholder="Ваше ім'я" />
-        </div>
-
-        <div class="field">
-          <label for="phone">Телефон <span aria-hidden="true" style="color:#d00">*</span></label>
-          <input id="phone" name="phone" type="tel" required placeholder="+380XXXXXXXXX" pattern="^[+0-9\s()-]{6,}$" />
-        </div>
-
-        <div class="field">
-          <label for="email">Email (необов'язково)</label>
-          <input id="email" name="email" type="email" placeholder="email@example.com" />
-        </div>
-
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
-          <button type="submit" class="btn">Отримати консультацію</button>
-          <button type="button" id="dismissBtn" class="btn" style="background:#666">Закрити</button>
-        </div>
-
-        <p class="consent">Закрыть</p>
-      </form>
+Будемо раді відповісти на ваші запитання та допомогти!
     </div>
-
-    <!-- Hidden success message (shown after submit) -->
-    <div class="modal" id="successMessage" style="display:none;max-width:420px;">
-      <div class="success">
-        <h2>Дякуємо!</h2>
-        
-        <button id="successClose" class="btn">Закрити</button>
-      </div>
+    <div class="buttons">
+      <button class="gs-btn gs-btn-close" id="gsModalCloseBtn">Закрить</button>
     </div>
   </div>
+</div>
 
 <script>
 (function(){
-  const overlay = document.getElementById('overlay');
-  const openBtn = document.getElementById('openBtn');
-  const closeBtn = document.getElementById('closeBtn');
-  const dismissBtn = document.getElementById('dismissBtn');
-  const contactForm = document.getElementById('contactForm');
-  const successMessage = document.getElementById('successMessage');
-  const modalContent = document.getElementById('modalContent');
-  const successClose = document.getElementById('successClose');
+  var backdrop = document.getElementById('gsModalBackdrop');
+  var closeBtn = document.getElementById('gsModalCloseBtn');
 
+  // Показать модалку (вызывать при загрузке или по кнопке)
   function showModal() {
-    overlay.classList.add('show');
-    overlay.setAttribute('aria-hidden','false');
-    try { localStorage.setItem('popup_shown','1'); } catch(e){}
-    closeBtn.focus();
-    document.addEventListener('focus', trapFocus, true);
-    document.addEventListener('keydown', onKey);
+    backdrop.style.display = 'flex';
+    backdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
   }
+
+  // Скрыть модалку
   function hideModal() {
-    overlay.classList.remove('show');
-    overlay.setAttribute('aria-hidden','true');
-    document.removeEventListener('focus', trapFocus, true);
-    document.removeEventListener('keydown', onKey);
-    openBtn.focus();
-    // hide success if visible
-    successMessage.style.display = 'none';
-    modalContent.style.display = '';
-  }
-  function showSuccess() {
-    modalContent.style.display = 'none';
-    successMessage.style.display = 'block';
-    successClose.focus();
-  }
-  function trapFocus(e) {
-    if (!overlay.contains(e.target)) {
-      e.stopPropagation();
-      closeBtn.focus();
-    }
-  }
-  function onKey(e) {
-    if (e.key === 'Escape') hideModal();
+    backdrop.style.display = 'none';
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
   }
 
-  openBtn.addEventListener('click', showModal);
+  // Закрытие по кнопке
   closeBtn.addEventListener('click', hideModal);
-  dismissBtn.addEventListener('click', hideModal);
-  successClose.addEventListener('click', hideModal);
-  overlay.addEventListener('click', function(e){
-    // закрити при кліку поза модалом
-    if (e.target === overlay) hideModal();
+
+  // Закрытие по клику на фон
+  backdrop.addEventListener('click', function(e){
+    if (e.target === backdrop) hideModal();
   });
 
-  // Обробка відправки форми
-  contactForm.addEventListener('submit', function(e){
-    e.preventDefault();
-
-    // Простая валідація
-    const name = contactForm.elements['name'].value.trim();
-    const phone = contactForm.elements['phone'].value.trim();
-    const email = contactForm.elements['email'].value.trim();
-
-    if (!name) {
-      alert('Будь ласка, введіть ім\'я.');
-      contactForm.elements['name'].focus();
-      return;
-    }
-    if (!phone) {
-      alert('Будь ласка, введіть телефон.');
-      contactForm.elements['phone'].focus();
-      return;
-    }
-
-    // Готові дані для відправки на сервер
-    const payload = { name, phone, email: email || null, submittedAt: new Date().toISOString() };
-
-    // --- ВАЖЛИВО ---
-    // Зараз форма не відправляється на сервер — для демонстрації показуємо повідомлення.
-    // Щоб підключити реальну відправку, замініть цю частину на:
-    // 1) contactForm.action = 'https://your-server.com/submit'; contactForm.method = 'post'; contactForm.submit();
-    // або
-    // 2) Використовуйте fetch:
-    //    fetch('https://your-endpoint', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) })
-    //    .then(...).catch(...);
-    // або
-    // 3) Налаштуйте Google Forms і використайте його POST-URL (складніше).
-    //
-    // Для демонстрації просто логіруємо і показуємо повідомлення:
-    console.log('Contact form payload:', payload);
-
-    // Показати повідомлення про успіх
-    showSuccess();
-
-    // Можна очистити форму:
-    contactForm.reset();
+  // Закрытие по Esc
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') hideModal();
   });
 
-  // Автопоказ один раз при першому візиті (задержка)
-  try {
-    if (!localStorage.getItem('popup_shown')) {
-      setTimeout(showModal, 1200);
-    }
-  } catch (e) { /* ignore */ }
+  // Автопоказ через 1.5 секунды после загрузки страницы (при необходимости)
+  window.addEventListener('load', function(){
+    setTimeout(showModal, 1500);
+  });
+
+  // Экспорт в глобальную область, если нужно программно показывать
+  window.gsShowContactModal = showModal;
+  window.gsHideContactModal = hideModal;
 })();
 </script>
-</body>
-</html>
