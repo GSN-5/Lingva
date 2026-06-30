@@ -1,18 +1,10 @@
 <!doctype html>
-<html lang="ru">
+<html lang="uk">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Popup Demo</title>
-  <meta name="description" content="Залиште свої контактні дані, і ми зв’яжемося з вами найближчим часом, відповімо на всі запитання щодо вступу, навчальних програм.
-Поля форми:
-Ім'я
-Телефон
-Email (необов'язково)
-Кнопка:
-Отримати консультацію
-Підпис під кнопкою:
-Натискаючи кнопку «Отримати консультацію», ви погоджуєтеся на обробку персональних даних." />
+  <title>Popup: Отримати консультацію</title>
+  <meta name="description" content="Форма для отримання консультації — демо" />
   <style>
     :root {
       --bg:#ffffff;
@@ -32,47 +24,63 @@ Email (необов'язково)
     .modal p{margin:0 0 12px;line-height:1.4}
     .close{position:absolute;top:8px;right:8px;background:transparent;border:0;font-size:22px;line-height:1;color:#666;cursor:pointer}
     .modal-footer{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    /* small screens */
+    form .field{margin-bottom:10px}
+    label{display:block;font-size:14px;margin-bottom:6px}
+    input[type="text"], input[type="tel"], input[type="email"]{
+      width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;
+    }
+    .consent{font-size:12px;color:#666;margin-top:8px}
+    .success{padding:16px;text-align:center}
     @media (max-width:420px){ .modal{padding:16px} .modal h2{font-size:18px} }
   </style>
 </head>
 <body>
   <main class="container" role="main">
-    <h1>Залиште свої контактні дані, і ми зв’яжемося з вами найближчим часом, відповімо на всі запитання щодо вступу, навчальних програм.
-Поля форми:</h1>
-    <p>Ім'я
-Телефон
-Email (необов'язково)
-Кнопка:
-Отримати консультацію
-Підпис під кнопкою:
-Натискаючи кнопку «Отримати консультацію», ви погоджуєтеся на обробку персональних даних.</p>
+    <h1>Демонстрація форми в спливаючому вікні</h1>
+    <p>Натисніть кнопку нижче, щоб відкрити форму для отримання консультації.</p>
     <p>
-      <button id="openBtn" class="btn" type="button">Показать всплывающее окно</button>
+      <button id="openBtn" class="btn" type="button">Отримати консультацію</button>
     </p>
   </main>
 
   <!-- Modal overlay -->
   <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
-    <div class="modal" role="document">
-      <button id="closeBtn" class="close" aria-label="Закрыть">&times;</button>
-      <h2 id="modalTitle">Подпишитесь на новости</h2>
-      <p>Подпишитесь, чтобы получать обновления и полезные материалы. Вариант: замените на уведомление или форму.</p>
+    <div class="modal" role="document" id="modalContent">
+      <button id="closeBtn" class="close" aria-label="Закрити">&times;</button>
+      <h2 id="modalTitle">Залиште свої контактні дані</h2>
+      <p>Ми зв’яжемося з вами найближчим часом і відповімо на всі питання щодо вступу та навчальних програм.</p>
 
-      <!-- Пример простой формы (не отправляет данные — замените action на ваш обработчик) -->
-      <!--
-      <form action="https://example.com/subscribe" method="post">
-        <input name="email" type="email" placeholder="Ваш email" required style="padding:8px;width:100%;box-sizing:border-box;margin-bottom:8px;border:1px solid #ddd;border-radius:6px" />
-        <div class="modal-footer">
-          <button type="submit" class="btn">Подписаться</button>
-          <button type="button" id="closeBtn2" class="btn" style="background:#666">Отмена</button>
+      <form id="contactForm" novalidate>
+        <div class="field">
+          <label for="name">Ім'я <span aria-hidden="true" style="color:#d00">*</span></label>
+          <input id="name" name="name" type="text" required autocomplete="name" placeholder="Ваше ім'я" />
         </div>
-      </form>
-      -->
 
-      <div class="modal-footer">
-        <a href="#" class="btn" id="actionBtn">Узнать больше</a>
-        <button id="dismissBtn" class="btn" style="background:#666">Закрыть</button>
+        <div class="field">
+          <label for="phone">Телефон <span aria-hidden="true" style="color:#d00">*</span></label>
+          <input id="phone" name="phone" type="tel" required placeholder="+380XXXXXXXXX" pattern="^[+0-9\s()-]{6,}$" />
+        </div>
+
+        <div class="field">
+          <label for="email">Email (необов'язково)</label>
+          <input id="email" name="email" type="email" placeholder="email@example.com" />
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
+          <button type="submit" class="btn">Отримати консультацію</button>
+          <button type="button" id="dismissBtn" class="btn" style="background:#666">Закрити</button>
+        </div>
+
+        <p class="consent">Натискаючи кнопку «Отримати консультацію», ви погоджуєтеся на обробку персональних даних.</p>
+      </form>
+    </div>
+
+    <!-- Hidden success message (shown after submit) -->
+    <div class="modal" id="successMessage" style="display:none;max-width:420px;">
+      <div class="success">
+        <h2>Дякуємо!</h2>
+        <p>Ми зв'яжемося з вами найближчим часом.</p>
+        <button id="successClose" class="btn">Закрити</button>
       </div>
     </div>
   </div>
@@ -83,64 +91,103 @@ Email (необов'язково)
   const openBtn = document.getElementById('openBtn');
   const closeBtn = document.getElementById('closeBtn');
   const dismissBtn = document.getElementById('dismissBtn');
-  const actionBtn = document.getElementById('actionBtn');
+  const contactForm = document.getElementById('contactForm');
+  const successMessage = document.getElementById('successMessage');
+  const modalContent = document.getElementById('modalContent');
+  const successClose = document.getElementById('successClose');
 
-  // Показывает модал
-  function show() {
+  function showModal() {
     overlay.classList.add('show');
     overlay.setAttribute('aria-hidden','false');
-    // Запомнить, что показали (показывать 1 раз при первом визите)
     try { localStorage.setItem('popup_shown','1'); } catch(e){}
-    // Сдвинуть фокус внутрь диалога для доступности
     closeBtn.focus();
     document.addEventListener('focus', trapFocus, true);
     document.addEventListener('keydown', onKey);
   }
-
-  function hide() {
+  function hideModal() {
     overlay.classList.remove('show');
     overlay.setAttribute('aria-hidden','true');
     document.removeEventListener('focus', trapFocus, true);
     document.removeEventListener('keydown', onKey);
     openBtn.focus();
+    // hide success if visible
+    successMessage.style.display = 'none';
+    modalContent.style.display = '';
   }
-
-  // Простая ловушка фокуса — если фокус уходит за пределы модала, возвращаем к кнопке закрытия
+  function showSuccess() {
+    modalContent.style.display = 'none';
+    successMessage.style.display = 'block';
+    successClose.focus();
+  }
   function trapFocus(e) {
     if (!overlay.contains(e.target)) {
       e.stopPropagation();
       closeBtn.focus();
     }
   }
-
   function onKey(e) {
-    if (e.key === 'Escape') hide();
+    if (e.key === 'Escape') hideModal();
   }
 
-  openBtn.addEventListener('click', show);
-  closeBtn.addEventListener('click', hide);
-  dismissBtn.addEventListener('click', hide);
-
-  // Пример действия кнопки — здесь можно перенаправить
-  actionBtn.addEventListener('click', function(e){
-    e.preventDefault();
-    // замените URL на нужный вам
-    window.open('https://example.com','_blank','noopener');
-  });
-
-  // Закрываем при клике по overlay вне модала
+  openBtn.addEventListener('click', showModal);
+  closeBtn.addEventListener('click', hideModal);
+  dismissBtn.addEventListener('click', hideModal);
+  successClose.addEventListener('click', hideModal);
   overlay.addEventListener('click', function(e){
-    if (e.target === overlay) hide();
+    // закрити при кліку поза модалом
+    if (e.target === overlay) hideModal();
   });
 
-  // Автопоказ один раз при первом визите (задержка 1.2s)
+  // Обробка відправки форми
+  contactForm.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    // Простая валідація
+    const name = contactForm.elements['name'].value.trim();
+    const phone = contactForm.elements['phone'].value.trim();
+    const email = contactForm.elements['email'].value.trim();
+
+    if (!name) {
+      alert('Будь ласка, введіть ім\'я.');
+      contactForm.elements['name'].focus();
+      return;
+    }
+    if (!phone) {
+      alert('Будь ласка, введіть телефон.');
+      contactForm.elements['phone'].focus();
+      return;
+    }
+
+    // Готові дані для відправки на сервер
+    const payload = { name, phone, email: email || null, submittedAt: new Date().toISOString() };
+
+    // --- ВАЖЛИВО ---
+    // Зараз форма не відправляється на сервер — для демонстрації показуємо повідомлення.
+    // Щоб підключити реальну відправку, замініть цю частину на:
+    // 1) contactForm.action = 'https://your-server.com/submit'; contactForm.method = 'post'; contactForm.submit();
+    // або
+    // 2) Використовуйте fetch:
+    //    fetch('https://your-endpoint', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+    //    .then(...).catch(...);
+    // або
+    // 3) Налаштуйте Google Forms і використайте його POST-URL (складніше).
+    //
+    // Для демонстрації просто логіруємо і показуємо повідомлення:
+    console.log('Contact form payload:', payload);
+
+    // Показати повідомлення про успіх
+    showSuccess();
+
+    // Можна очистити форму:
+    contactForm.reset();
+  });
+
+  // Автопоказ один раз при першому візиті (задержка)
   try {
     if (!localStorage.getItem('popup_shown')) {
-      setTimeout(show, 1200);
+      setTimeout(showModal, 1200);
     }
-  } catch (e) {
-    // если localStorage недоступен, ничего страшного — автопоказ отключён
-  }
+  } catch (e) { /* ignore */ }
 })();
 </script>
 </body>
