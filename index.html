@@ -1,65 +1,89 @@
-<!-- Вставьте этот блок в HTML-виджет -->
-<style>
-/* Стили модального окна */
-.gs-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-.gs-modal {
-  background: #fff;
-  max-width: 420px;
-  width: 90%;
-  border-radius: 10px;
-  padding: 18px 20px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
-  font-family: Arial, Helvetica, sans-serif;
-  color: #111;
-}
-.gs-modal h3 {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-}
-.gs-modal .contacts {
-  white-space: pre-line;
-  font-size: 15px;
-  line-height: 1.4;
-  margin-bottom: 14px;
-}
-.gs-modal .buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-.gs-btn {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-}
-.gs-btn-primary {
-  background: #0b74de;
-  color: #fff;
-}
-.gs-btn-close {
-  background: #f1f1f1;
-  color: #111;
-}
-@media (max-width: 420px){
-  .gs-modal { padding: 14px; }
-}
-</style>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Popup</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-<!-- Структура модального окна -->
-<div id="gsModalBackdrop" class="gs-modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="gs-modal" role="document" aria-labelledby="gsModalTitle">
-    <h3 id="gsModalTitle">📞 Зв'яжіться з нами</h3>
-    <div class="contacts">
+    .contact-popup {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 9999;
+      display: none;
+      width: fit-content;
+      max-width: calc(100vw - 40px);
+      background: #ffffff;
+      color: #111111;
+      border: 1px solid #d9d9d9;
+      border-radius: 14px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+      padding: 16px 18px;
+    }
+
+    .contact-popup.show {
+      display: block;
+      animation: slideUp 0.25s ease-out;
+    }
+
+    .contact-popup h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .contact-popup .text {
+      white-space: pre-line;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .contact-popup button {
+      background: #0b74de;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .contact-popup button:hover {
+      background: #095db0;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .contact-popup {
+        right: 12px;
+        left: 12px;
+        bottom: 12px;
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="contactPopup" class="contact-popup">
+    <h3>📞 Зв'яжіться з нами</h3>
+    <div class="text">
 Телефони:
 +380 50 470 26 85
 +380 98 789 62 29
@@ -70,51 +94,23 @@ Telegram / Viber / WhatsApp:
 
 Будемо раді відповісти на ваші запитання та допомогти!
     </div>
-    <div class="buttons">
-      <button class="gs-btn gs-btn-close" id="gsModalCloseBtn">Закрить</button>
-    </div>
+    <button id="closePopup">Закрить</button>
   </div>
-</div>
 
-<script>
-(function(){
-  var backdrop = document.getElementById('gsModalBackdrop');
-  var closeBtn = document.getElementById('gsModalCloseBtn');
+  <script>
+    const popup = document.getElementById('contactPopup');
+    const closeBtn = document.getElementById('closePopup');
 
-  // Показать модалку (вызывать при загрузке или по кнопке)
-  function showModal() {
-    backdrop.style.display = 'flex';
-    backdrop.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  }
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        popup.classList.add('show');
+      }, 1000);
+    });
 
-  // Скрыть модалку
-  function hideModal() {
-    backdrop.style.display = 'none';
-    backdrop.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
+    closeBtn.addEventListener('click', () => {
+      popup.classList.remove('show');
+    });
+  </script>
 
-  // Закрытие по кнопке
-  closeBtn.addEventListener('click', hideModal);
-
-  // Закрытие по клику на фон
-  backdrop.addEventListener('click', function(e){
-    if (e.target === backdrop) hideModal();
-  });
-
-  // Закрытие по Esc
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape') hideModal();
-  });
-
-  // Автопоказ через 1.5 секунды после загрузки страницы (при необходимости)
-  window.addEventListener('load', function(){
-    setTimeout(showModal, 1500);
-  });
-
-  // Экспорт в глобальную область, если нужно программно показывать
-  window.gsShowContactModal = showModal;
-  window.gsHideContactModal = hideModal;
-})();
-</script>
+</body>
+</html>
